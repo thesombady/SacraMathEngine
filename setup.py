@@ -13,6 +13,7 @@ setup(
     long_description_content_type = "text/markdown",
     py_modules = ["Matrix", "Vector", "Triangle"],
     #package_dir = {'':'src'},
+    include_package_data = True,
     packages = find_packages(),
     license = "MIT",
     classifiers = [
