@@ -5,6 +5,10 @@ import json
 
 class Triangle:
     def __init__(self, vec1, vec2, vec3):
+        """
+        if not isinstance((vec1, vec2, vec3), vec3d):
+            raise TypeError("Wrong format in Triangle")
+        """
         self.vec1 = vec1
         self.vec2 = vec2
         self.vec3 = vec3
@@ -14,7 +18,7 @@ class Triangle:
         return f'[{self.vec1}, {self.vec2}, {self.vec3}]'
 
     def __len__(self):
-        return len(self.set)
+        return len(self.set) #Could be len(self.set)
 
     def __getitem__(self, index):
         return self.set[index]
@@ -31,15 +35,22 @@ class MeshObject:
         if not isinstance(Object, dict):
             raise KeyError("Cannot load current file-type")
         else:
+            self.Name = Name
+            self.Clearobject = Object
             self.Object = Object[Name]
 
     def __mul__(self, Scalar):
-
-        pass
+        NewObject = []
+        for i in range(len(self.Object)):
+            NewObject.append(self.Object * Scalar)
+        Object = {f'{self.Name}' : NewObject}
+        return MeshObject(Object, self.Name)
 
 
     def __str__(self):
         return f'{self.Object}'
+        #json.dumps(self.Clearobjects, indent=4, sort_keys=True))
+
 
     def __len__(self):
         return len(self.Object)
@@ -80,10 +91,6 @@ Cube = {
 }
 
 Cube2 = MeshObject(Cube, 'Cube')
-for i in range(len(Cube2)):
-    for j in range(len(Cube2[i])):
-        print(Cube2[i][j])
-
 
 
 """
