@@ -3,7 +3,7 @@
 
 # Installation
 Using PIP you'll be able to install SacraMathEngine, however note that this package is built for the sole reason of being inside Sacra Game Engine. If might not fit your needs nor your hopes.
-```python
+```bash
 pip install SacraMathEngine
 ```
 

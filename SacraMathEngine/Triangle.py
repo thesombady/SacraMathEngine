@@ -8,7 +8,7 @@ class Triangle:
         """
         if not isinstance((vec1, vec2, vec3), vec3d):
             raise TypeError("Wrong format in Triangle")
-        """
+        """ 
         self.vec1 = vec1
         self.vec2 = vec2
         self.vec3 = vec3
