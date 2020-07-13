@@ -10,33 +10,41 @@ class matrix3d:
         self.matrix = (self.vec1, self.vec2, self.vec3)
 
     def __str__(self):
+        """Default print statement"""
         return f'<({self.vec1[0]}, {self.vec1[1]}, {self.vec1[2]})\n ({self.vec2[0]}, {self.vec2[1]}, {self.vec2[2]})\n ({self.vec3[0]}, {self.vec3[1]}, {self.vec3[2]})>'
 
     def __add__(self, other):
+        """Definition of addition of two matrix3d-objects; Returns a matrix3d-object."""
         if isinstance(other, matrix3d):
             return matrix3d(self.vec1 + other.vec1, self.vec2 + other.vec2, self.vec3 + other.vec3)
         else:
             pass
 
     def __radd__(self, other):
+        """Definition of reverse-addition of two matrix3d-objects; Returns a matrix3d-object."""
         if isinstance(other, matrix3d):
             return matrix3d(self.vec1 + other.vec1, self.vec2 + other.vec2, self.vec3 + other.vec3)
         else:
             pass
 
     def __sub__(self, other):
+        """Definition of subtraction of two matrix3d-objects; Returns a matrix3d-object."""
         if isinstance(other, matrix3d):
             return matrix3d(self.vec1 - other.vec1, self.vec2 - other.vec2, self.vec3 - other.vec3)
         else:
             pass
 
     def __rsub__(self, other):
+        """Definition of reverse-subtraction of two matrix3d-objects; Returns a matrix3d-object."""
         if isinstance(other, matrix3d):
             return matrix3d(self.vec1 - other.vec1, self.vec2 - other.vec2, self.vec3 - other.vec3)
         else:
             pass
 
     def __mul__(self, other):
+        """Definition of scalar multiplciation with matrix3d-object, if not the attribute 'other', is a scalar but rather
+        a matrix3d it returns m matrix3d-object; If the attribute 'other' is of type vec3d, it returns a vec3d-object as per definition
+        of vector matrix multiplication with a 3sqaure matrix and 3-d vector."""
         if isinstance(other, (int, float)):
             return matrix3d(vec1 * other, vec2 * other, vec3 * other)
         elif isinstance(other, vec3d):
@@ -62,6 +70,7 @@ class matrix3d:
             pass
 
     def trace(self):
+        """Computes the trace of a given matrix."""
         return self.vec1[0] + self.vec2[1] + self.vec3[2]
 
 class Matrix4d:
