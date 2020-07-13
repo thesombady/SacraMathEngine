@@ -1,7 +1,7 @@
-#from .Vector import vec3d
-#from .Matrix import matrix3d
-from SacraMathEngine import vec3d
-import json
+from .Vector import vec3d
+from .Matrix import matrix3d
+#from SacraMathEngine import vec3d
+#import json
 
 class Triangle:
     def __init__(self, vec1, vec2, vec3):
@@ -83,6 +83,7 @@ Cube = {
     [vec3d(1, 0, 1), vec3d(0, 0, 0), vec3d(1, 0, 0)]]]
 }
 """
+"""
 Cube = {
     "Cube" : [[Triangle(vec3d(0, 0, 0), vec3d(0, 1, 0), vec3d(1, 1, 0))],
     [Triangle(vec3d(0, 0, 0), vec3d(1, 1, 0), vec3d(1, 0, 0))],
@@ -99,8 +100,7 @@ Cube = {
 }
 
 Cube2 = MeshObject(Cube, 'Cube')
-print(Cube2)
-
+"""
 
 """
 MeshCube = {
