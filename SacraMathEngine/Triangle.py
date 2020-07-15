@@ -1,7 +1,6 @@
 from .Vector import vec3d
 from .Matrix import matrix3d
-#from SacraMathEngine import vec3d
-#import json
+
 
 class Triangle:
     def __init__(self, vec1, vec2, vec3):
@@ -18,6 +17,12 @@ class Triangle:
         """Print statement for Triangle-object"""
         return f'[{self.vec1}, {self.vec2}, {self.vec3}]'
 
+    def __add__(self, Other):
+        if isinstance(Other, vec3d):
+            return Triangle(self.vec1 + Other, self.vec2 + Object, self.vec3 + Other)
+        else:
+            pass
+
     def __len__(self):
         """Return the length of triangle, which is 3 by definition. """
         return 3 #Could be len(self.set)
@@ -29,6 +34,6 @@ class Triangle:
     def __mul__(self, Scalar):
         """Returns a Triangle-object where each vector i multiplied by the scalar 'Scalar'."""
         if isinstance(Scalar, (float, int)):
-            return Triangle(self.vec1 * Scalar, self.vec2 * Saclar, self.vec3 * Scalar)
+            return Triangle(self.vec1 * Scalar, self.vec2 * Scalar, self.vec3 * Scalar)
         else:
             pass
