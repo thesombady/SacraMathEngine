@@ -19,7 +19,7 @@ class Triangle:
 
     def __add__(self, Other):
         if isinstance(Other, vec3d):
-            return Triangle(self.vec1 + Other, self.vec2 + Object, self.vec3 + Other)
+            return Triangle(self.vec1 + Other.x, self.vec2 + Other.y, self.vec3 + Other.z)
         else:
             pass
 

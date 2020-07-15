@@ -7,16 +7,19 @@ import os
 
 
 class MeshObject:
-    def __init__(self, Object, Name):
-        if isinstance(Object, (list, tuple)): #Standard if one wants something quickly, and not importing as a json
+    def __init__(self, Object, Name, Done = False):
+        if isinstance(Object, (list, tuple)) and not Done: #Standard if one wants something quickly, and not importing as a json
             self.Name = Name
             self.IntalizeFromList(Object)
             pass
-        elif isinstance(Object, dict): #When we read from a dictionary, when importing from json.
+        elif isinstance(Object, dict) and not Done: #When we read from a dictionary, when importing from json.
             self.Name = Name
             self.IntalizeFromDict(Object)
         else:
-            pass
+            #This part of the code will execute if neither of the above is fulfilled, thus when adding or multiplying.
+            self.Mesh = Object
+            self.Name = Name
+
 
     def IntalizeFromList(self, Object):
         """ When giving a list as starting argument; Intalize such that one returns a current mesh as a list of triangles with vec3d objects."""
@@ -34,30 +37,38 @@ class MeshObject:
         return f'{self.Mesh}'
 
     def __repr__(self):
-        return f'{self.Mesh}'
+        return f'{(self.Mesh)}'
 
     def SaveToJson(self):
         pass
 
     def __add__(self, Other):
+        """Adder function that adds differently depending on which type of input. """
         if isinstance(Other, Triangle):
             NewMesh = self.Mesh + [Other]
-            return MeshObject(NewMesh, self.Name)
-        elif isinstance(Other, Vector):
-            pass
+            return MeshObject(NewMesh, self.Name, Done = True)
+        elif isinstance(Other, vec3d):
+            def adder(tri):
+                """Helper function to __add__; If one tries to add a tringle this one is used."""
+                if isinstance(tri, Triangle):
+                    return tri + Other
+                else:
+                    raise TypeError("Wrong input in helper function to __add__.\n The vector addition is not working correctly. ")
+            NewMesh = list(map(adder, self.Mesh))
+            return MeshObject(NewMesh, self.Mesh, Done = True)
         elif isinstance(Other, MeshObject):
             NewMesh = self.Mesh + Other.Mesh
-            return MeshObject(NewMesh, self.Name)
+            return MeshObject(NewMesh, self.Name, Done = True)
 
     def __mul__(self, Scalar):
-        if isinstance(Scalar, (flaot, int)):
+        if isinstance(Scalar, (float, int)):
             def mul(tri):
                 if isinstance(tri, Triangle):
-                    return triangle * Scalar
+                    return tri * Scalar
                 else:
                     pass
-            NewMesh = map(mul, self.Mesh)
-            return MeshObject(NewMesh, self.Name)
+            NewMesh = list(map(mul, self.Mesh))
+            return MeshObject(NewMesh, self.Name, Done = True)
 
         else:
             raise TypeError("Cannot scale a mesh with anything but floats or integers")
@@ -65,6 +76,8 @@ class MeshObject:
     def __dir__(self):
         return ['__str__', '__repr__', '__add__', '__mul__', 'IntalizeFromDict', 'IntalizeFromList', 'SaveToJson', '__init__'] #Update on working
 
+    def __len__(self):
+        return len(self.Mesh)
 
 
 
@@ -83,7 +96,9 @@ Cube2 = [[0,0,0], [0, 1, 0], [1, 1, 0],
     [1, 0, 1], [0, 0, 0], [1, 0, 0]]
 
 MeshCube = MeshObject(Cube2, 'Cube')
-print(dir(MeshCube))
+vec1 = vec3d(1,1,1)
+tri = Triangle(vec1, vec1, vec1)
+print(len(MeshCube + tri))
 
 
 
