@@ -23,12 +23,23 @@ class MeshObject:
 
     def IntalizeFromList(self, Object):
         """ When giving a list as starting argument; Intalize such that one returns a current mesh as a list of triangles with vec3d objects."""
+        # A "bug", it  cannot load entire cube but only the first Triangle
         self.Mesh = []
         Vectors = []
         for i in range(len(Object)):
             Vectors.append(vec3d(Object[0], Object[1], Object[2]))
+        print(Vectors)
         for i in range(0, len(Vectors) - 2, 3):
             self.Mesh.append(Triangle(Vectors[i], Vectors[i + 1], Vectors[i + 2]))
+
+    def __sub__(self, Other):
+        """Remove a triangle from a mesh, if the triangle exits."""
+        if isinstance(Other, Triangle):
+            if Other in self.Mesh:
+                NewMesh = self.Mesh.remove(Other)
+                return MeshObject(NewMesh, self.Name, Done = True)
+            else:
+                return KeyError("Can only remove a Triangle-Object.")
 
     def IntalizeFromDict(self, Object):
         pass
@@ -39,8 +50,9 @@ class MeshObject:
     def __repr__(self):
         return f'{(self.Mesh)}'
 
-    def SaveToJson(self):
-        pass
+    def SaveToJson(self, Path = os.getcwd()):
+        Mesh = []
+        print(self.Mesh)
 
     def __add__(self, Other):
         """Adder function that adds differently depending on which type of input. """
@@ -98,7 +110,7 @@ Cube2 = [[0,0,0], [0, 1, 0], [1, 1, 0],
 MeshCube = MeshObject(Cube2, 'Cube')
 vec1 = vec3d(1,1,1)
 tri = Triangle(vec1, vec1, vec1)
-print(len(MeshCube + tri))
+print(MeshCube.SaveToJson())
 
 
 
