@@ -1,12 +1,12 @@
 #from .Vector import vec3d
 #from .Matrix import matrix3d
 #from .Triangle import Triangle
-from SacraMathEngine import vec3d, Triangle
+from SacraMathEngine import vec3d, vec4d, Triangle
 import json
 import os
 
 
-class MeshObject:
+class MeshObject3d:
     def __init__(self, Object, Name, Done = False):
         if isinstance(Object, (list, tuple)) and not Done: #Standard if one wants something quickly, and not importing as a json
             self.Name = Name
@@ -32,12 +32,15 @@ class MeshObject:
         for i in range(0, len(Vectors) - 2, 3):
             self.Mesh.append(Triangle(Vectors[i], Vectors[i + 1], Vectors[i + 2]))
 
+    def Intalize(self):
+        pass
+
     def __sub__(self, Other):
         """Remove a triangle from a mesh, if the triangle exits."""
         if isinstance(Other, Triangle):
             if Other in self.Mesh:
                 NewMesh = self.Mesh.remove(Other)
-                return MeshObject(NewMesh, self.Name, Done = True)
+                return MeshObject3d(NewMesh, self.Name, Done = True)
             else:
                 return KeyError("Can only remove a Triangle-Object.")
 
@@ -58,7 +61,7 @@ class MeshObject:
         """Adder function that adds differently depending on which type of input. """
         if isinstance(Other, Triangle):
             NewMesh = self.Mesh + [Other]
-            return MeshObject(NewMesh, self.Name, Done = True)
+            return MeshObject3d(NewMesh, self.Name, Done = True)
         elif isinstance(Other, vec3d):
             def adder(tri):
                 """Helper function to __add__; If one tries to add a tringle this one is used."""
@@ -67,10 +70,10 @@ class MeshObject:
                 else:
                     raise TypeError("Wrong input in helper function to __add__.\n The vector addition is not working correctly. ")
             NewMesh = list(map(adder, self.Mesh))
-            return MeshObject(NewMesh, self.Mesh, Done = True)
-        elif isinstance(Other, MeshObject):
+            return MeshObject3d(NewMesh, self.Mesh, Done = True)
+        elif isinstance(Other, MeshObject3d):
             NewMesh = self.Mesh + Other.Mesh
-            return MeshObject(NewMesh, self.Name, Done = True)
+            return MeshObject3d(NewMesh, self.Name, Done = True)
 
     def __mul__(self, Scalar):
         if isinstance(Scalar, (float, int)):
@@ -80,7 +83,7 @@ class MeshObject:
                 else:
                     pass
             NewMesh = list(map(mul, self.Mesh))
-            return MeshObject(NewMesh, self.Name, Done = True)
+            return MeshObject3d(NewMesh, self.Name, Done = True)
 
         else:
             raise TypeError("Cannot scale a mesh with anything but floats or integers")
@@ -106,12 +109,12 @@ Cube2 = [[0,0,0], [0, 1, 0], [1, 1, 0],
     [0, 1, 0], [1, 1, 1], [1, 1, 0],
     [1, 0, 1], [0, 0, 1], [0, 0, 0],
     [1, 0, 1], [0, 0, 0], [1, 0, 0]]
-
-MeshCube = MeshObject(Cube2, 'Cube')
+"""
+MeshCube = MeshObject3d(Cube2, 'Cube')
 vec1 = vec3d(1,1,1)
 tri = Triangle(vec1, vec1, vec1)
 print(MeshCube.SaveToJson())
-
+"""
 
 
 """
@@ -161,7 +164,7 @@ Cube = {
     [Triangle(vec3d(1, 0, 1), vec3d(0, 0, 0), vec3d(1, 0, 0))]]
 }
 
-Cube2 = MeshObject(Cube, 'Cube')
+Cube2 = MeshObject3d(Cube, 'Cube')
 print(Cube2)
 """
 
@@ -182,3 +185,10 @@ MeshCube = {
     (vec3d(1, 0, 1), vec3d(0, 0, 0), vec3d(1, 0, 0))]
 }
 """
+
+class MeshObject4d:
+    #Continue to make more or less the same thing as above
+    def __init__(self, Object, Name, Done = False):
+        if isinstance(Object, (list, tuple)) and not Done:
+            self.Object = Object
+            self.Name = Name

@@ -4,7 +4,7 @@ class vec3d:
         self.x = x
         self.y = y
         self.z = z
-        self.vector = (self.x, self.y, self.z)
+        self.vector = [self.x, self.y, self.z]
 
     def __repr__(self):
         """Default print statement"""
@@ -95,7 +95,7 @@ class vec3d:
 
 class vec4d:
 
-    def __init__(self, x, y, z, w):
+    def __init__(self, x, y, z, w = 1):
         self.x = x
         self.y = y
         self.z = z
@@ -109,4 +109,69 @@ class vec4d:
         else:
             pass
     def __add__(self, other):
-        return vec4d(self.x + other.x, self.y + other.y, self.z + other.z, self.w + other.w)
+        if isinstance(other, vec4d):
+            return vec4d(self.x + other.x, self.y + other.y, self.z + other.z, self.w + other.w)
+
+    def __radd__(self, other):
+        if isinstance(other, vec4d):
+            return vec4d(self.x + other.x, self.y + other.y, self.z + other.z, self.w + other.w)
+
+    def __sub__(self, other):
+        if isinstance(other, vec4d):
+            return vec4d(self.x - other.x, self.y - other.y, self.z - other.z, self.w - other.w)
+
+    def __rsub__(self, other):
+        if isinstance(other, vec4d):
+            return vec4d(self.x - other.x, self.y - other.y, self.z - other.z, self.w - other.w)
+
+    def __str__(self):
+        return f'<({self.x}, {self.y}, {self.z}, {self.w})>'
+
+    def __repr__(self):
+        return f'<({self.x}, {self.y}, {self.z}, {self.w})>'
+
+    def __mul__(self, value):
+        """Definition of scalar multiplication, only works with float or integers; Returns a vec3d-object.s"""
+        if isinstance(value, vec4d):
+            pass
+        elif isinstance(value, (float, int)):
+            return vec4d(self.x * value, self.y * value, self.z * value, self.w * value)
+        else:
+            pass
+
+    def __rmul__(self, value):
+        """Definition of scalar multiplication, only works with float or integers; Returns a vec3d-object.s"""
+        if isinstance(value, vec4d):
+            pass
+        elif isinstance(value, (float, int)):
+            return vec4d(self.x * value, self.y * value, self.z * value, self.w * value)
+        else:
+            pass
+
+    def __getitem__(self, index):
+        return self.vector[index]
+
+    def cross(self, other):
+        """Compute the cross-product of two vec3d-objects; Returns a vec3d-object."""
+        if isinstance(other, vec3d):
+            col1 = self.y * other.z - self.z * other.y
+            col2 = self.z * other.x - self.x * other.z
+            col3 = self.x * other.y - self.y * other.z
+            return vec4d(col1, col2, col3, 1)
+        else:
+            pass
+
+    def dot(self, other):
+        if isinstance(other, vec4d):
+            value = self.x * other.x + self.y * other.y + self.z * other.z + self.w * other.w
+            return value
+        else:
+            pass
+
+    def norm(self):
+        """Calculates the norm of a given vector, returns a scalar of either type integer or float."""
+        value = (self.x ** 2 + self.y ** 2 + self.z ** 2 + self.w ** 2) ** (1/2)
+        return value
+
+    def normalize(self):
+        return 1 / self.norm() * vec4d(self.x, self.y, self.z, self.w)
