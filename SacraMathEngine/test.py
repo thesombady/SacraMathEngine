@@ -17,7 +17,9 @@ class MeshObject:
         if Iterated != None:
             self.Mesh = Iterated #Everything should be in correct format by this point.
             print(self.Mesh)
-        self.Mesh = None #Just initialize the artibute self.Mesh
+            #print(self.Mesh)
+        else:
+            self.Mesh = None #Just initialize the artibute self.Mesh
 
     def setter(self, NameOfObject):
         """The argument NameOfObject is path to the MeshObject, of which should be in json format. The path will be found
@@ -42,9 +44,10 @@ class MeshObject:
         for key in Data.keys():
             print(key, Data[key])
         """ # Small thing to get acess to the name
+        return '[System:] Intalization have been completed.'
 
     def getter(self):
-        return f'{Self.Mesh}'
+        return f'{self.Mesh}'
 
     def __repr__(self):
         return f'{self.Mesh}'
@@ -54,8 +57,8 @@ class MeshObject:
 
     def __add__(self, Object):
         if isinstance(Object, Triangle):
-            NewMesh = self.Mesh
-            NewMesh.append(Object)#Adding a triangle to the list of triangles.
+            NewMesh = self.Mesh.copy()
+            NewMesh.append(Object)
             return MeshObject(NewMesh)
         elif isinstance(Object, MeshObject):
             pass
@@ -66,9 +69,13 @@ class MeshObject:
     def __mul__(self, Object):
         if isinstance(Object, (int, float)):
             NewMesh = []
-            for tri in self.Mesh:
+            for tri in self.Mesh: # Each atribute "tri" is a triangle object.
                 NewMesh.append(tri * Object)
             return MeshObject(NewMesh)
+
+    def __getitem__(self, index):
+        if isinstance(index, int):
+            return self.Mesh[index]
 
 
     def SaveToJson(self):
@@ -89,12 +96,15 @@ class MeshObject:
 
 
 Cube = MeshObject()
-print(Cube.setter('test'))
-print(len(Cube))#Output : 12
-print(Cube + Triangle(vec3d(1,1,1), vec3d(1,1,1), vec3d(1,1,1)))
-print(len(Cube))#Output : 13 #Creating a bug, it seems like it Iterates. It adds whilst it shouldn't
-print(Cube * 2)
-Cube.SaveToJson()
+(Cube.setter('test'))
+#print(len(Cube))#Output : 12
+vec1 = vec3d(1,1,1)
+vec2 = vec3d(1,1,1)
+vec3 = vec3d(1,1,1)
+tri = Triangle(vec1, vec2, vec3)
+#print(Cube * 2)
+#Cube.SaveToJson()
+
 
 Cube = """{"Cube" : [[0,0,0], [0, 1, 0], [1, 1, 0],
     [0, 0, 0], [1, 1, 0], [1, 0, 0],

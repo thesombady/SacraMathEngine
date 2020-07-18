@@ -39,3 +39,10 @@ class Triangle:
             return Triangle(self.vec1 * Scalar, self.vec2 * Scalar, self.vec3 * Scalar)
         else:
             pass
+
+    def normvector(self):
+        """Calculates the facing of the Triangle."""
+        vec1 = self.vec1 - self.vec3
+        vec2 = self.vec2 - self.vec3
+        normvector = vec1.cross(vec2)
+        return normvector
