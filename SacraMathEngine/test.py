@@ -1,112 +1,103 @@
-import os
+#from .Vector import vec3d
+#from .Matrix import matrix3d
+#from .Triangle import Triangle
+from SacraMathEngine import vec3d, vec4d, Triangle
 import json
-from SacraMathEngine import vec3d, Triangle
-
-class PathError(Exception):
-    """Error-handeling."""
-    pass
+import os
 
 
-class MeshObject:
-
-    AllActiveMeshes = []
-
-    def __init__(self, Iterated = None):
-        """A small __init__ function, pass no argument, it's only when scaling or adding something the Iterated argument
-        is used."""
-        if Iterated != None:
-            self.Mesh = Iterated #Everything should be in correct format by this point.
-            print(self.Mesh)
-            #print(self.Mesh)
+class MeshObject3d:
+    def __init__(self, Object, Name, Done = False):
+        if isinstance(Object, (list, tuple)) and not Done: #Standard if one wants something quickly, and not importing as a json
+            self.Name = Name
+            self.IntalizeFromList(Object)
+            pass
+        elif isinstance(Object, dict) and not Done: #When we read from a dictionary, when importing from json.
+            self.Name = Name
+            self.IntalizeFromDict(Object)
         else:
-            self.Mesh = None #Just initialize the artibute self.Mesh
+            #This part of the code will execute if neither of the above is fulfilled, thus when adding or multiplying.
+            self.Mesh = Object
+            self.Name = Name
 
-    def setter(self, NameOfObject):
-        """The argument NameOfObject is path to the MeshObject, of which should be in json format. The path will be found
-        as in the Saves folder in SacraGameEngine."""
-        try:
-            path = os.path.join('/Users/andreasevensen/Documents/GitHub/Sacra/saves', NameOfObject + '.json') #change when done
-            with open(path) as file:
-                Data = json.load(file)
-            for x in Data.keys():
-                ListMesh = Data[x]
-            #print(ListMesh[0])
-        except:
-            raise PathError("Current file do not exits.")
-        Vectors = []
+
+    def IntalizeFromList(self, Object):
+        """ When giving a list as starting argument; Intalize such that one returns a current mesh as a list of triangles with vec3d objects."""
+        # A "bug", it  cannot load entire cube but only the first Triangle
         self.Mesh = []
-        for vec in ListMesh:
-            vec = vec3d(vec[0], vec[1], vec[2])
-            Vectors.append(vec)
-        for i in range(0, len(Vectors)-2, 3):
+        Vectors = []
+        for i in range(len(Object)):
+            Vectors.append(vec3d(Object[0], Object[1], Object[2]))
+        print(Vectors)
+        for i in range(0, len(Vectors) - 2, 3):
             self.Mesh.append(Triangle(Vectors[i], Vectors[i + 1], Vectors[i + 2]))
-        """
-        for key in Data.keys():
-            print(key, Data[key])
-        """ # Small thing to get acess to the name
-        return '[System:] Intalization have been completed.'
 
-    def getter(self):
-        return f'{self.Mesh}'
+    def Intalize(self):
+        pass
 
-    def __repr__(self):
-        return f'{self.Mesh}'
+    def __sub__(self, Other):
+        """Remove a triangle from a mesh, if the triangle exits."""
+        if isinstance(Other, Triangle):
+            if Other in self.Mesh:
+                NewMesh = self.Mesh.remove(Other)
+                return MeshObject3d(NewMesh, self.Name, Done = True)
+            else:
+                return KeyError("Can only remove a Triangle-Object.")
+
+    def IntalizeFromDict(self, Object):
+        pass
 
     def __str__(self):
         return f'{self.Mesh}'
 
-    def __add__(self, Object):
-        if isinstance(Object, Triangle):
-            NewMesh = self.Mesh.copy()
-            NewMesh.append(Object)
-            return MeshObject(NewMesh)
-        elif isinstance(Object, MeshObject):
-            pass
+    def __repr__(self):
+        return f'{(self.Mesh)}'
+
+    def SaveToJson(self, Path = os.getcwd()):
+        Mesh = []
+        print(self.Mesh)
+
+    def __add__(self, Other):
+        """Adder function that adds differently depending on which type of input. """
+        if isinstance(Other, Triangle):
+            NewMesh = self.Mesh + [Other]
+            return MeshObject3d(NewMesh, self.Name, Done = True)
+        elif isinstance(Other, vec3d):
+            def adder(tri):
+                """Helper function to __add__; If one tries to add a tringle this one is used."""
+                if isinstance(tri, Triangle):
+                    return tri + Other
+                else:
+                    raise TypeError("Wrong input in helper function to __add__.\n The vector addition is not working correctly. ")
+            NewMesh = list(map(adder, self.Mesh))
+            return MeshObject3d(NewMesh, self.Mesh, Done = True)
+        elif isinstance(Other, MeshObject3d):
+            NewMesh = self.Mesh + Other.Mesh
+            return MeshObject3d(NewMesh, self.Name, Done = True)
+
+    def __mul__(self, Scalar):
+        if isinstance(Scalar, (float, int)):
+            def mul(tri):
+                if isinstance(tri, Triangle):
+                    return tri * Scalar
+                else:
+                    pass
+            NewMesh = list(map(mul, self.Mesh))
+            return MeshObject3d(NewMesh, self.Name, Done = True)
+
+        else:
+            raise TypeError("Cannot scale a mesh with anything but floats or integers")
+
+    def __dir__(self):
+        return ['__str__', '__repr__', '__add__', '__mul__', 'IntalizeFromDict', 'IntalizeFromList', 'SaveToJson', '__init__'] #Update on working
 
     def __len__(self):
         return len(self.Mesh)
 
-    def __mul__(self, Object):
-        if isinstance(Object, (int, float)):
-            NewMesh = []
-            for tri in self.Mesh: # Each atribute "tri" is a triangle object.
-                NewMesh.append(tri * Object)
-            return MeshObject(NewMesh)
-
-    def __getitem__(self, index):
-        if isinstance(index, int):
-            return self.Mesh[index]
-
-
-    def SaveToJson(self):
-        Triangles = []
-        for tri in self.Mesh:
-            Triangles.append([tri[0], tri[1], tri[2]])
-        print(Triangles)
-        Vectors = []
-        for i in range(len(Triangles)):
-            Vectors.append([Triangles[i][0], Triangles[i][1], Triangles[i][2]])
-            print(i)#Not working this solution
-        print(Vectors)
 
 
 
-
-
-
-
-Cube = MeshObject()
-(Cube.setter('test'))
-#print(len(Cube))#Output : 12
-vec1 = vec3d(1,1,1)
-vec2 = vec3d(1,1,1)
-vec3 = vec3d(1,1,1)
-tri = Triangle(vec1, vec2, vec3)
-#print(Cube * 2)
-#Cube.SaveToJson()
-
-
-Cube = """{"Cube" : [[0,0,0], [0, 1, 0], [1, 1, 0],
+Cube2 = [[0,0,0], [0, 1, 0], [1, 1, 0],
     [0, 0, 0], [1, 1, 0], [1, 0, 0],
     [1, 0, 0], [1, 1, 0], [1, 1, 1],
     [1, 0, 0], [1, 1, 1], [1, 0, 1],
@@ -117,8 +108,87 @@ Cube = """{"Cube" : [[0,0,0], [0, 1, 0], [1, 1, 0],
     [0, 1, 0], [0, 1, 1], [1, 1, 1],
     [0, 1, 0], [1, 1, 1], [1, 1, 0],
     [1, 0, 1], [0, 0, 1], [0, 0, 0],
-    [1, 0, 1], [0, 0, 0], [1, 0, 0]]}"""
+    [1, 0, 1], [0, 0, 0], [1, 0, 0]]
+"""
+MeshCube = MeshObject3d(Cube2, 'Cube')
+vec1 = vec3d(1,1,1)
+tri = Triangle(vec1, vec1, vec1)
+print(MeshCube.SaveToJson())
+"""
 
-#data = json.loads(Cube)
-#rawdata = json.dumps(data, indent = 4)
-#print(json.dumps(data, indent = 4))
+
+"""
+Cube = {
+    "Cube" : [[[vec3d(0, 0, 0), vec3d(0, 1, 0), vec3d(1, 1, 0)],
+    [vec3d(0, 0, 0), vec3d(1, 1, 0), vec3d(1, 0, 0)]],
+    [[vec3d(1, 0, 0), vec3d(1, 1, 0), vec3d(1, 1, 1)],
+    [vec3d(1, 0, 0), vec3d(1, 1, 1), vec3d(1, 0, 1)]],
+    [[vec3d(1, 0, 1), vec3d(1, 1, 1), vec3d(0, 1, 1)],
+    [vec3d(1, 0, 1), vec3d(0, 1, 1), vec3d(0, 0, 1)]],
+    [[vec3d(0, 0, 1), vec3d(0, 1, 1), vec3d(0, 1, 0)],
+    [vec3d(0, 0, 1), vec3d(0, 1, 0), vec3d(0, 0, 0)]],
+    [[vec3d(0, 1, 0), vec3d(0, 1, 1), vec3d(1, 1, 1)],
+    [vec3d(0, 1, 0), vec3d(1, 1, 1), vec3d(1, 1, 0)]],
+    [[vec3d(1, 0, 1), vec3d(0, 0, 1), vec3d(0, 0, 0)],
+    [vec3d(1, 0, 1), vec3d(0, 0, 0), vec3d(1, 0, 0)]]]
+}
+"""
+"""
+Cube = [[[vec3d(0, 0, 0), vec3d(0, 1, 0), vec3d(1, 1, 0)],
+    [vec3d(0, 0, 0), vec3d(1, 1, 0), vec3d(1, 0, 0)]],
+    [[vec3d(1, 0, 0), vec3d(1, 1, 0), vec3d(1, 1, 1)],
+    [vec3d(1, 0, 0), vec3d(1, 1, 1), vec3d(1, 0, 1)]],
+    [[vec3d(1, 0, 1), vec3d(1, 1, 1), vec3d(0, 1, 1)],
+    [vec3d(1, 0, 1), vec3d(0, 1, 1), vec3d(0, 0, 1)]],
+    [[vec3d(0, 0, 1), vec3d(0, 1, 1), vec3d(0, 1, 0)],
+    [vec3d(0, 0, 1), vec3d(0, 1, 0), vec3d(0, 0, 0)]],
+    [[vec3d(0, 1, 0), vec3d(0, 1, 1), vec3d(1, 1, 1)],
+    [vec3d(0, 1, 0), vec3d(1, 1, 1), vec3d(1, 1, 0)]],
+    [[vec3d(1, 0, 1), vec3d(0, 0, 1), vec3d(0, 0, 0)],
+    [vec3d(1, 0, 1), vec3d(0, 0, 0), vec3d(1, 0, 0)]]]
+"""
+
+"""
+Cube = {
+    "Cube" : [[Triangle(vec3d(0, 0, 0), vec3d(0, 1, 0), vec3d(1, 1, 0))],
+    [Triangle(vec3d(0, 0, 0), vec3d(1, 1, 0), vec3d(1, 0, 0))],
+    [Triangle(vec3d(1, 0, 0), vec3d(1, 1, 0), vec3d(1, 1, 1))],
+    [Triangle(vec3d(1, 0, 0), vec3d(1, 1, 1), vec3d(1, 0, 1))],
+    [Triangle(vec3d(1, 0, 1), vec3d(1, 1, 1), vec3d(0, 1, 1))],
+    [Triangle(vec3d(1, 0, 1), vec3d(0, 1, 1), vec3d(0, 0, 1))],
+    [Triangle(vec3d(0, 0, 1), vec3d(0, 1, 1), vec3d(0, 1, 0))],
+    [Triangle(vec3d(0, 0, 1), vec3d(0, 1, 0), vec3d(0, 0, 0))],
+    [Triangle(vec3d(0, 1, 0), vec3d(0, 1, 1), vec3d(1, 1, 1))],
+    [Triangle(vec3d(0, 1, 0), vec3d(1, 1, 1), vec3d(1, 1, 0))],
+    [Triangle(vec3d(1, 0, 1), vec3d(0, 0, 1), vec3d(0, 0, 0))],
+    [Triangle(vec3d(1, 0, 1), vec3d(0, 0, 0), vec3d(1, 0, 0))]]
+}
+
+Cube2 = MeshObject3d(Cube, 'Cube')
+print(Cube2)
+"""
+
+
+"""
+MeshCube = {
+    "South" : [(vec3d(0, 0, 0), vec3d(0, 1, 0), vec3d(1, 1, 0)),
+    (vec3d(0, 0, 0), vec3d(1, 1, 0), vec3d(1, 0, 0))],
+    "East" : [(vec3d(1, 0, 0), vec3d(1, 1, 0), vec3d(1, 1, 1)),
+    (vec3d(1, 0, 0), vec3d(1, 1, 1), vec3d(1, 0, 1))],
+    "North": [(vec3d(1, 0, 1), vec3d(1, 1, 1), vec3d(0, 1, 1)),
+    (vec3d(1, 0, 1), vec3d(0, 1, 1), vec3d(0, 0, 1))],
+    "West" : [(vec3d(0, 0, 1), vec3d(0, 1, 1), vec3d(0, 1, 0)),
+    (vec3d(0, 0, 1), vec3d(0, 1, 0), vec3d(0, 0, 0))],
+    "Top" : [(vec3d(0, 1, 0), vec3d(0, 1, 1), vec3d(1, 1, 1)),
+    (vec3d(0, 1, 0), vec3d(1, 1, 1), vec3d(1, 1, 0))],
+    "Bottom" : [(vec3d(1, 0, 1), vec3d(0, 0, 1), vec3d(0, 0, 0)),
+    (vec3d(1, 0, 1), vec3d(0, 0, 0), vec3d(1, 0, 0))]
+}
+"""
+
+class MeshObject4d:
+    #Continue to make more or less the same thing as above
+    def __init__(self, Object, Name, Done = False):
+        if isinstance(Object, (list, tuple)) and not Done:
+            self.Object = Object
+            self.Name = Name
