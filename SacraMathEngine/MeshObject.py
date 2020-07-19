@@ -158,7 +158,7 @@ class MeshObject:
         except:
             raise PathError("Cannot save file.")
 
-
+#Cube = MeshObject()
 
 Cube = """{"Cube" : [[0,0,0], [0, 1, 0], [1, 1, 0],
     [0, 0, 0], [1, 1, 0], [1, 0, 0],
@@ -172,6 +172,7 @@ Cube = """{"Cube" : [[0,0,0], [0, 1, 0], [1, 1, 0],
     [0, 1, 0], [1, 1, 1], [1, 1, 0],
     [1, 0, 1], [0, 0, 1], [0, 0, 0],
     [1, 0, 1], [0, 0, 0], [1, 0, 0]]}"""
+
 
 #data = json.loads(Cube)
 #rawdata = json.dumps(data, indent = 4)
