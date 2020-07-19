@@ -6,10 +6,15 @@ class PathError(Exception):
     """Error-handeling."""
     pass
 
+class MeshObjectError(Exception):
+    """Error-handeling."""
+    pass
+
 
 class MeshObject:
 
     AllActiveMeshes = []
+    MeshCenterOfMass = []
 
     def __init__(self, Iterated = None):
         """A small __init__ function, pass no argument, it's only when scaling or adding something the Iterated argument
@@ -17,6 +22,7 @@ class MeshObject:
         if Iterated != None:
             self.Mesh = Iterated #Everything should be in correct format by this point.
             print(self.Mesh)
+            self.AllActiveMeshes.append(self.Mesh)
             #print(self.Mesh)
         else:
             self.Mesh = None #Just initialize the artibute self.Mesh
@@ -44,6 +50,7 @@ class MeshObject:
         for key in Data.keys():
             print(key, Data[key])
         """ # Small thing to get acess to the name
+        self.AllActiveMeshes.append(self.Mesh)
         return '[System:] Intalization have been completed.'
 
     def getter(self):
@@ -80,6 +87,32 @@ class MeshObject:
         if isinstance(index, int):
             return self.Mesh[index]
 
+    def CenterOfMass(self):
+        """Returns a vuege center of mass, with some deviation; The deviation is the longest distance from center of mass.
+        This method is not optimized for non-symetrical Meshes."""
+        CenterOfTriangles = []
+        for item in self.Mesh:
+            center = item[0] + item[1] + item[2]
+            CenterOfTriangles.append(center)
+        sum = vec3d(0,0,0)
+        print(CenterOfTriangles)
+        for vector in CenterOfTriangles:
+            sum += vector
+        center = sum * (1/len(CenterOfTriangles))
+        delta =
+
+
+    def Collission(self):
+        """Returns a boolean expression for each object colliding; Works upon the center of mass definition."""
+        MeshesToSearchThrough = self.AllActiveMeshes.copy()
+        try:
+            index = MeshesToSearchThrough.index(self.Mesh)
+            MeshesToSearchThrough.remove(self.Mesh)
+            CenterOfMasses = MeshCenterOfMass.copy()
+            del CenterOfMasses[index: index + 1]
+        except:
+            raise MeshObjectError('Mesh do not exist in the list of Meshes.')
+        #We have a copy of the correct meshes to verify relate distances
 
     def SaveToJson(self):
         Triangles = []
@@ -107,6 +140,7 @@ vec3 = vec3d(1,1,1)
 tri = Triangle(vec1, vec2, vec3)
 #print(Cube * 2)
 #Cube.SaveToJson()
+Cube.CenterOfMass()
 
 
 Cube = """{"Cube" : [[0,0,0], [0, 1, 0], [1, 1, 0],

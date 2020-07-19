@@ -92,6 +92,25 @@ class vec3d:
         """Normalizes a vector with self.norm() function and returns a vec3d-object"""
         return 1 / (self.norm()) * vec3d(self.vec1, self.vec2, self.vec3) # a valid solution is * self
 
+    def line(self, Other, Number):
+        """Returns multiple vectors that increase equvilantly"""
+        #Not done yet
+        if isinstance(Number, int) and isinstance(Other, vec3d):
+
+            Number = Number + 1
+            epsilonx = abs(self.x - Other.x) / Number
+            epsilony = abs(self.y - Other.y) / Number
+            epsilonz = abs(self.z - Other.z) / Number
+            Line = []
+            for i in range(1, Number):
+                 Line.append(vec3d(epsilonx * i, epsilony * i, epsilonz * i))
+            return Line
+
+            #while self < = Other
+
+        else:
+            raise TypeError("Line method can only take integers as inputs")
+
 
 class vec4d:
 
