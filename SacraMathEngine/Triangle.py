@@ -15,7 +15,7 @@ class Triangle:
         self.vec2 = vec2
         self.vec3 = vec3
         self.reminder = reminder
-        self.set = [self.vec1, self.vec2, self.vec3, self.reminder]
+        self.set = [self.vec1, self.vec2, self.vec3]
 
 
     def __str__(self):
@@ -46,6 +46,11 @@ class Triangle:
             return Triangle(self.vec1 * Scalar, self.vec2 * Scalar, self.vec3 * Scalar)
         else:
             pass
+
+    def __len__(self):
+        return len(self.set)
+
+
 
     def normvector(self):
         """Calculates the facing of the Triangle."""

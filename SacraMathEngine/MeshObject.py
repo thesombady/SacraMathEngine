@@ -1,6 +1,8 @@
 import os
 import json
-from SacraMathEngine import vec3d, Triangle, vec4d
+from .Vector import vec3d, vec4d
+from .Triangle import Triangle
+from .Matrix import matrix3d
 
 class PathError(Exception):
     """Error-handeling."""
@@ -96,6 +98,10 @@ class MeshObject:
         if isinstance(index, int):
             return self.Mesh[index]
 
+    def __dir__(self):
+        return ['__mul__', '__add__', 'CenterOfMass', 'Collission', '__len__', '__getitem__',
+        '__str__', '__repr__', 'getter', 'setter', 'SaveToJson']
+
     def CenterOfMass(self):
         """Returns a vuege center of mass, with some deviation; The deviation is the longest distance from center of mass.
         This method is not optimized for non-symetrical Meshes."""
@@ -120,38 +126,35 @@ class MeshObject:
         MeshesToSearchThrough = self.AllActiveMeshes.copy()
         MeshesCenterOfMass = self.MeshCenterOfMass.copy()
         try:
-            MeshesToSearchThrough = MeshesToSearchThrough.remove(self.Mesh)
-            MeshesCenterOfMass = MeshesCenterOfMass.remove(self.CenterOfGravity)
+            IndexForMesh = MeshesToSearchThrough.index(self.Mesh)
+            IndexForMass = MeshesCenterOfMass.index(self.CenterOfGravity)
+            del MeshesToSearchThrough[IndexForMesh: IndexForMass +1]
+            del MeshesCenterOfMass[IndexForMass: IndexForMass + 1]
         except:
-            raise MeshObjectError("Cannot Cannot compute the current mesh")
+            raise MeshObjectError("Cannot performe Collission calculations, indicies do not exist \n Needs atleast two meshes to search through.")
+        for mesh in MeshesCenterOfMass: #This is not yet completed!
+            if self.CenterOfGravity[1] == 0:
+                print('Something happens')
 
 
-    def SaveToJson(self):
-        Triangles = []
-        for tri in self.Mesh:
-            Triangles.append([tri[0], tri[1], tri[2]])
-        print(Triangles)
-        Vectors = []
-        for i in range(len(Triangles)):
-            Vectors.append([Triangles[i][0], Triangles[i][1], Triangles[i][2]])
-            print(i)#Not working this solution
-        print(Vectors)
+    def SaveToJson(self, Name):
+        """Save the current MeshObject as a .json file."""
+        # Add so that we cannot override!
+        try:
+            path = os.path.join('/Users/andreasevensen/Documents/GitHub/Sacra/saves', Name + '.json')
+        except:
+            raise PathError("Cannot load the path")
+        MeshSave = []
+        for i in range(len(self.Mesh)):
+            for j in range(len(self.Mesh[i])):
+                MeshSave.append([self.Mesh[i][j][0], self.Mesh[i][j][1], self.Mesh[i][j][2]])
+        data = {Name : MeshSave}
+        try:
+            with open(path, 'w') as file:
+                json.dump(data, file, indent = 4)
+        except:
+            raise PathError("Cannot save file.")
 
-
-
-Cube = MeshObject()
-(Cube.setter('test'))
-vec1 = vec3d(10,10,10)
-vec2 = vec3d(10,10,10)
-vec3 = vec3d(10,10,10)
-tri = Triangle(vec1, vec2, vec3)
-Cube2 = Cube + vec1
-print(Cube.CenterOfGravity)
-print(Cube2.CenterOfGravity)
-
-#print(Cube2)
-#print(Cube * 2)
-#Cube.SaveToJson()
 
 
 Cube = """{"Cube" : [[0,0,0], [0, 1, 0], [1, 1, 0],
@@ -170,3 +173,73 @@ Cube = """{"Cube" : [[0,0,0], [0, 1, 0], [1, 1, 0],
 #data = json.loads(Cube)
 #rawdata = json.dumps(data, indent = 4)
 #print(json.dumps(data, indent = 4))
+
+
+"""
+Cube = {
+    "Cube" : [[[vec3d(0, 0, 0), vec3d(0, 1, 0), vec3d(1, 1, 0)],
+    [vec3d(0, 0, 0), vec3d(1, 1, 0), vec3d(1, 0, 0)]],
+    [[vec3d(1, 0, 0), vec3d(1, 1, 0), vec3d(1, 1, 1)],
+    [vec3d(1, 0, 0), vec3d(1, 1, 1), vec3d(1, 0, 1)]],
+    [[vec3d(1, 0, 1), vec3d(1, 1, 1), vec3d(0, 1, 1)],
+    [vec3d(1, 0, 1), vec3d(0, 1, 1), vec3d(0, 0, 1)]],
+    [[vec3d(0, 0, 1), vec3d(0, 1, 1), vec3d(0, 1, 0)],
+    [vec3d(0, 0, 1), vec3d(0, 1, 0), vec3d(0, 0, 0)]],
+    [[vec3d(0, 1, 0), vec3d(0, 1, 1), vec3d(1, 1, 1)],
+    [vec3d(0, 1, 0), vec3d(1, 1, 1), vec3d(1, 1, 0)]],
+    [[vec3d(1, 0, 1), vec3d(0, 0, 1), vec3d(0, 0, 0)],
+    [vec3d(1, 0, 1), vec3d(0, 0, 0), vec3d(1, 0, 0)]]]
+}
+"""
+"""
+Cube = [[[vec3d(0, 0, 0), vec3d(0, 1, 0), vec3d(1, 1, 0)],
+    [vec3d(0, 0, 0), vec3d(1, 1, 0), vec3d(1, 0, 0)]],
+    [[vec3d(1, 0, 0), vec3d(1, 1, 0), vec3d(1, 1, 1)],
+    [vec3d(1, 0, 0), vec3d(1, 1, 1), vec3d(1, 0, 1)]],
+    [[vec3d(1, 0, 1), vec3d(1, 1, 1), vec3d(0, 1, 1)],
+    [vec3d(1, 0, 1), vec3d(0, 1, 1), vec3d(0, 0, 1)]],
+    [[vec3d(0, 0, 1), vec3d(0, 1, 1), vec3d(0, 1, 0)],
+    [vec3d(0, 0, 1), vec3d(0, 1, 0), vec3d(0, 0, 0)]],
+    [[vec3d(0, 1, 0), vec3d(0, 1, 1), vec3d(1, 1, 1)],
+    [vec3d(0, 1, 0), vec3d(1, 1, 1), vec3d(1, 1, 0)]],
+    [[vec3d(1, 0, 1), vec3d(0, 0, 1), vec3d(0, 0, 0)],
+    [vec3d(1, 0, 1), vec3d(0, 0, 0), vec3d(1, 0, 0)]]]
+"""
+
+"""
+Cube = {
+    "Cube" : [[Triangle(vec3d(0, 0, 0), vec3d(0, 1, 0), vec3d(1, 1, 0))],
+    [Triangle(vec3d(0, 0, 0), vec3d(1, 1, 0), vec3d(1, 0, 0))],
+    [Triangle(vec3d(1, 0, 0), vec3d(1, 1, 0), vec3d(1, 1, 1))],
+    [Triangle(vec3d(1, 0, 0), vec3d(1, 1, 1), vec3d(1, 0, 1))],
+    [Triangle(vec3d(1, 0, 1), vec3d(1, 1, 1), vec3d(0, 1, 1))],
+    [Triangle(vec3d(1, 0, 1), vec3d(0, 1, 1), vec3d(0, 0, 1))],
+    [Triangle(vec3d(0, 0, 1), vec3d(0, 1, 1), vec3d(0, 1, 0))],
+    [Triangle(vec3d(0, 0, 1), vec3d(0, 1, 0), vec3d(0, 0, 0))],
+    [Triangle(vec3d(0, 1, 0), vec3d(0, 1, 1), vec3d(1, 1, 1))],
+    [Triangle(vec3d(0, 1, 0), vec3d(1, 1, 1), vec3d(1, 1, 0))],
+    [Triangle(vec3d(1, 0, 1), vec3d(0, 0, 1), vec3d(0, 0, 0))],
+    [Triangle(vec3d(1, 0, 1), vec3d(0, 0, 0), vec3d(1, 0, 0))]]
+}
+
+Cube2 = MeshObject3d(Cube, 'Cube')
+print(Cube2)
+"""
+
+
+"""
+MeshCube = {
+    "South" : [(vec3d(0, 0, 0), vec3d(0, 1, 0), vec3d(1, 1, 0)),
+    (vec3d(0, 0, 0), vec3d(1, 1, 0), vec3d(1, 0, 0))],
+    "East" : [(vec3d(1, 0, 0), vec3d(1, 1, 0), vec3d(1, 1, 1)),
+    (vec3d(1, 0, 0), vec3d(1, 1, 1), vec3d(1, 0, 1))],
+    "North": [(vec3d(1, 0, 1), vec3d(1, 1, 1), vec3d(0, 1, 1)),
+    (vec3d(1, 0, 1), vec3d(0, 1, 1), vec3d(0, 0, 1))],
+    "West" : [(vec3d(0, 0, 1), vec3d(0, 1, 1), vec3d(0, 1, 0)),
+    (vec3d(0, 0, 1), vec3d(0, 1, 0), vec3d(0, 0, 0))],
+    "Top" : [(vec3d(0, 1, 0), vec3d(0, 1, 1), vec3d(1, 1, 1)),
+    (vec3d(0, 1, 0), vec3d(1, 1, 1), vec3d(1, 1, 0))],
+    "Bottom" : [(vec3d(1, 0, 1), vec3d(0, 0, 1), vec3d(0, 0, 0)),
+    (vec3d(1, 0, 1), vec3d(0, 0, 0), vec3d(1, 0, 0))]
+}
+"""

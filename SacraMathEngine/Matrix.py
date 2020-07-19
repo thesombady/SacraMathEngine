@@ -1,6 +1,6 @@
 #from .Vector import vec3d, vec4d
 from math import tan, pi
-from SacraMathEngine import vec3d, vec4d
+from .Vector import vec3d, vec4d
 
 class matrix3d:
     """ Intalizes a matrix which is in R^3 space; Of which the basic eigen-values can be computed. """

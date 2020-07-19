@@ -12,7 +12,7 @@ class vec3d:
             self.x = x
             self.y = y
             self.z = z
-        self.vector = [self.x, self.y, self.z]
+        self.set = self.x, self.y, self.z
 
     def __repr__(self):
         """Default print statement"""
@@ -68,10 +68,13 @@ class vec3d:
 
     def __getitem__(self, Index):
         """Get the value of the vec3d-object at index 'Index'."""
-        return self.vector[Index]
+        return self.set[Index]
 
     def __abs__(self):
         return vec3d(abs(self.x), abs(self.y), abs(self.y))
+
+    def __len__(self):
+        return len(self.set)
 
     def __truediv__(self, Scalar):
         if isinstance(Scalar, (float, int)):
