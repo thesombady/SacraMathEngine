@@ -1,9 +1,17 @@
 
 class vec3d:
     def __init__(self, x, y, z):
-        self.x = x
-        self.y = y
-        self.z = z
+        if x == None or y == None or z == None:
+            if x == None:
+                self.x = 0
+            elif y == None:
+                self.y = 0
+            elif z == None:
+                self.z = 0
+        else:
+            self.x = x
+            self.y = y
+            self.z = z
         self.vector = [self.x, self.y, self.z]
 
     def __repr__(self):
@@ -61,6 +69,20 @@ class vec3d:
     def __getitem__(self, Index):
         """Get the value of the vec3d-object at index 'Index'."""
         return self.vector[Index]
+
+    def __abs__(self):
+        return vec3d(abs(self.x), abs(self.y), abs(self.y))
+
+    def __truediv__(self, Scalar):
+        if isinstance(Scalar, (float, int)):
+            if Scalar != 0:
+                return vec3d(self.x / Scalar, self.y / Scalar, self.z / Scalar)
+            else:
+                raise ValueError("Cannot performe division with zero.")
+        elif isinstance(Scalar, vec3d):
+            raise TypeError("Cannot performe division with a vector object")
+        else:
+            pass
 
     def dot(self, other):
         """Compute the dot-product of two vectors, returns a float or integer."""

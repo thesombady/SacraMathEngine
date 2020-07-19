@@ -1,5 +1,8 @@
-from .Vector import vec3d
+"""
+from .Vector import vec3d, vec4d
 from .Matrix import matrix3d
+"""
+from SacraMathEngine import *
 
 
 class Triangle:
@@ -19,11 +22,15 @@ class Triangle:
         """Print statement for Triangle-object"""
         return f'[{self.vec1}, {self.vec2}, {self.vec3}]'
 
-    def __add__(self, Other):
-        if isinstance(Other, (vec3d, vec4d)):
-            return Triangle(self.vec1 + Other.x, self.vec2 + Other.y, self.vec3 + Other.z)
+    def __add__(self, vector):
+        if isinstance(vector, (vec3d, vec4d)):
+            return Triangle(self.vec1 + vector, self.vec2 + vector, self.vec3 + vector)
         else:
             pass
+
+    def __sub__(self, vector):
+        if isinstance(vector, (vec3d, vec4d)):
+            return Triangle(self.vec1 - vector, self.vec2 - vector, self.vec3 - vector)
 
     def __len__(self):
         """Return the length of triangle, which is 3 by definition. """
