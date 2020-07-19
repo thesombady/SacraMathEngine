@@ -1,6 +1,6 @@
-#from .Vector import vec3d, vec4d
-from math import tan, pi
+from math import tan, pi, radians
 from .Vector import vec3d, vec4d
+#from SacraMathEngine import vec3d, vec4d
 
 class matrix3d:
     """ Intalizes a matrix which is in R^3 space; Of which the basic eigen-values can be computed. """
@@ -81,8 +81,14 @@ class Matrix4d:
             self.vec2 = vec2
             self.vec3 = vec3
             self.vec4 = vec4
+        elif vec1 != None or vec2 != None or vec3 != None or vec4d != None:
+            #self.InitializeProjection()
+            pass
         else:
-            raise TypeError("Cannot intialize if not input is vec4d- objects.")
+            self.vec1 = vec1
+            self.vec2 = vec2
+            self.vec3 = vec3
+            self.vec4 = vec4
 
     def __str__(self):
         """Standard print-statement"""
@@ -105,27 +111,38 @@ class Matrix4d:
             vec2 = self.vec2[0] * Other.x + self.vec2[1] * Other.y + self.vec2[2] * Other.z + self.vec2[3] * Other.w
             vec3 = self.vec3[0] * Other.x + self.vec3[1] * Other.y + self.vec3[2] * Other.z + self.vec3[3] * Other.w
             vec4 = self.vec4[0] * Other.x + self.vec4[1] * Other.y + self.vec4[2] * Other.z + self.vec4[3] * Other.w
-            return vec4d(vec1, vec2, vec3, vec4)
-        else:
-            pass
+            if vec4 != 0:
+                return vec4d(vec1 / vec4, vec2 / vec4, vec3 / vec4, vec4 / vec4)
+            else:
+                raise ZeroDivisionError("Cannot divide by Zero\nCannot return to cartesian space")
+        elif isinstance(Other, vec3d):
+            Other = vec4d(vector = Other)
+            vec1 = self.vec1[0] * Other.x + self.vec1[1] * Other.y + self.vec1[2] * Other.z + self.vec1[3] * Other.w
+            vec2 = self.vec2[0] * Other.x + self.vec2[1] * Other.y + self.vec2[2] * Other.z + self.vec2[3] * Other.w
+            vec3 = self.vec3[0] * Other.x + self.vec3[1] * Other.y + self.vec3[2] * Other.z + self.vec3[3] * Other.w
+            vec4 = self.vec4[0] * Other.x + self.vec4[1] * Other.y + self.vec4[2] * Other.z + self.vec4[3] * Other.w
+            if vec4 != 0:
+                return vec4d(vec1 / vec4, vec2 / vec4, vec3 / vec4, vec4 / vec4)
+            else:
+                raise ZeroDivisionError("Cannot divide by Zero\nCannot return to cartesian space")
 
     def trace(self):
         value = self.vec1[0] + self.vec2[1] + self.vec3[2] + self.vec4[3]
         return value
 
-    def InitializeProjection(self):
-        self.Near = 0.1
-        self.Far = 1000
-        self.Fov = 90
-        self.Aspectratio = self.size[0] / self.size[1]
-        self.fFovRad = 1 / tan(self.Fov * 0.5 / 180 * pi)
-        vec1 = [self.Aspectratio * self.fFovRad, 0, 0, 0]
-        vec2 = [0, self.fFovRad, 0, 0]
-        vec3 = [0, 0, (-self.far * self.Near) / (self.Far - self.Near), 1]
-        vec4 = [0, 0, self.Near, 0]
 
-vec11 = vec4d(1,0,0,0)
-vec12 = vec4d(0,1,0,0)
-vec13 = vec4d(0,0,1,0)
-vec14 = vec4d(0,0,0,1)
-#print(Matrix4d(vec11, vec12, vec13, vec14) * vec4d(1,1,1,1))
+def ProjectionMatrix(size = (100,100), theta = 30, zfar = 1000, znear = 0.01):
+    if size[1] != None:
+        ratio = size[0] / size[1]
+    else:
+        size = 1
+    fratio = 1 / tan(radians(theta)) #Convert to radians
+    qratio = zfar / (zfar - znear)
+    vec1 = vec4d(ratio * fratio, 0, 0, 0)
+    vec2 = vec4d(0, fratio, 0, 0)
+    vec3 = vec4d(0, 0, qratio , 1)
+    vec4 = vec4d(0, 0, qratio - znear * qratio, 0)
+    return Matrix4d(vec1, vec2, vec3, vec4)
+
+#Prodmatrix = ProjectionMatrix()
+#print(Prodmatrix)

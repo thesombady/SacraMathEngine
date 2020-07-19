@@ -1,8 +1,8 @@
-"""
+
 from .Vector import vec3d, vec4d
 from .Matrix import matrix3d
-"""
-from SacraMathEngine import *
+
+#from SacraMathEngine import *
 
 
 class Triangle:

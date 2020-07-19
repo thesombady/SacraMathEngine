@@ -2,7 +2,10 @@ import os
 import json
 from .Vector import vec3d, vec4d
 from .Triangle import Triangle
-from .Matrix import matrix3d
+from .Matrix import matrix3d, Matrix4d
+#from SacraMathEngine import vec3d, vec4d, Triangle, matrix3d
+
+
 
 class PathError(Exception):
     """Error-handeling."""
@@ -147,11 +150,11 @@ class MeshObject:
         MeshSave = []
         for i in range(len(self.Mesh)):
             for j in range(len(self.Mesh[i])):
-                MeshSave.append([self.Mesh[i][j][0], self.Mesh[i][j][1], self.Mesh[i][j][2]])
+                MeshSave.append([self.Mesh[i][j][0], self.Mesh[i][j][1], self.Mesh[i][j][2]])#This is the vector
         data = {Name : MeshSave}
         try:
             with open(path, 'w') as file:
-                json.dump(data, file, indent = 4)
+                json.dump(data, file, indent = 3)
         except:
             raise PathError("Cannot save file.")
 

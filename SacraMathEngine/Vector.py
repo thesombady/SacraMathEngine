@@ -1,4 +1,3 @@
-
 class vec3d:
     def __init__(self, x, y, z):
         if x == None or y == None or z == None:
@@ -136,15 +135,24 @@ class vec3d:
         else:
             raise TypeError("Line method can only take integers as inputs")
 
+    def project2d(self, ratio, theta):
+
+        pass
 
 class vec4d:
 
-    def __init__(self, x, y, z, w = 1):
-        self.x = x
-        self.y = y
-        self.z = z
-        self.w = w
-        self.vector = (self.x, self.y, self.z, self.w)
+    def __init__(self, x = None, y = None, z = None, w = 1, vector = None):
+        if vector != None and isinstance(vector, vec3d):
+            self.x = vector.x
+            self.y = vector.y
+            self.z = vector.z
+            self.w = 1
+        else:
+            self.x = x
+            self.y = y
+            self.z = z
+            self.w = w
+            self.vector = (self.x, self.y, self.z, self.w)
 
     def __truediv__(self, value):
         if value != 0:
@@ -152,6 +160,10 @@ class vec4d:
             return vec4d(x, y, z, w)
         else:
             pass
+
+    def __abs__(self):
+        return vec4d(abs(self.x), abs(self.y), abs(self.z), abs(self.w))
+
     def __add__(self, other):
         if isinstance(other, vec4d):
             return vec4d(self.x + other.x, self.y + other.y, self.z + other.z, self.w + other.w)
@@ -183,14 +195,6 @@ class vec4d:
         else:
             pass
 
-    def __rmul__(self, value):
-        """Definition of scalar multiplication, only works with float or integers; Returns a vec3d-object.s"""
-        if isinstance(value, vec4d):
-            pass
-        elif isinstance(value, (float, int)):
-            return vec4d(self.x * value, self.y * value, self.z * value, self.w * value)
-        else:
-            pass
 
     def __getitem__(self, index):
         return self.vector[index]
@@ -218,4 +222,16 @@ class vec4d:
         return value
 
     def normalize(self):
-        return 1 / self.norm() * vec4d(self.x, self.y, self.z, self.w)
+        normvalue = self.norm()
+        if normvalue != 0:
+            return 1 / normvalue  * vec4d(self.x, self.y, self.z, self.w)
+        else:
+            raise ZeroDivisionError("The norm of the vector i zero, and thus it cannot be normalized.\nDivision with zero would occur.")
+
+    def line(self, other, number):
+        mapx = abs(self.x - other.x) / number
+        mapy = abs(self.y - other.y) / number
+        mapz = abs(self.z - other.z) / number
+        mapw = abs(self.w - other.w) / number
+        vectors =[vec4d(self.x + mapx * i, self.y + mapy * i, self.z + mapz * i, self.w + mapw * i) for i in range(number + 1)]
+        print(vectors[-1])
