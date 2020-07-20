@@ -1,6 +1,6 @@
 from math import tan, pi, radians
 from .Vector import vec3d, vec4d
-#from SacraMathEngine import vec3d, vec4d
+#from SacraMathEngine import *
 
 class matrix3d:
     """ Intalizes a matrix which is in R^3 space; Of which the basic eigen-values can be computed. """
@@ -111,8 +111,26 @@ class Matrix4d:
             vec2 = self.vec2[0] * Other.x + self.vec2[1] * Other.y + self.vec2[2] * Other.z + self.vec2[3] * Other.w
             vec3 = self.vec3[0] * Other.x + self.vec3[1] * Other.y + self.vec3[2] * Other.z + self.vec3[3] * Other.w
             vec4 = self.vec4[0] * Other.x + self.vec4[1] * Other.y + self.vec4[2] * Other.z + self.vec4[3] * Other.w
+            return vec4d(vec1, vec2, vec3, vec4)
+        elif isinstance(Other, vec3d):
+            Other = vec4d(vector = Other)
+            vec1 = self.vec1[0] * Other.x + self.vec1[1] * Other.y + self.vec1[2] * Other.z + self.vec1[3] * Other.w
+            vec2 = self.vec2[0] * Other.x + self.vec2[1] * Other.y + self.vec2[2] * Other.z + self.vec2[3] * Other.w
+            vec3 = self.vec3[0] * Other.x + self.vec3[1] * Other.y + self.vec3[2] * Other.z + self.vec3[3] * Other.w
+            vec4 = self.vec4[0] * Other.x + self.vec4[1] * Other.y + self.vec4[2] * Other.z + self.vec4[3] * Other.w
+            return vec4d(vec1, vec2, vec3, vec4)
+
+    def Multiplcation(self, Other):
+        """Standard multiplication with scalar and a vec4d-object."""
+        if isinstance(Other, (int, float)):
+            return Matrix4d(self.vec1 * Other, self.vec2 * Other, self.vec3 * Other, self.vec4 * Other)
+        elif isinstance(Other, vec4d):
+            vec1 = self.vec1[0] * Other.x + self.vec1[1] * Other.y + self.vec1[2] * Other.z + self.vec1[3] * Other.w
+            vec2 = self.vec2[0] * Other.x + self.vec2[1] * Other.y + self.vec2[2] * Other.z + self.vec2[3] * Other.w
+            vec3 = self.vec3[0] * Other.x + self.vec3[1] * Other.y + self.vec3[2] * Other.z + self.vec3[3] * Other.w
+            vec4 = self.vec4[0] * Other.x + self.vec4[1] * Other.y + self.vec4[2] * Other.z + self.vec4[3] * Other.w
             if vec4 != 0:
-                return vec4d(vec1 / vec4, vec2 / vec4, vec3 / vec4, vec4 / vec4)
+                return vec4d(vec1 / vec4, vec2 / vec4, vec3 / vec4, vec4 / vec4) #Can manually change whether to use w or not
             else:
                 raise ZeroDivisionError("Cannot divide by Zero\nCannot return to cartesian space")
         elif isinstance(Other, vec3d):
@@ -122,7 +140,7 @@ class Matrix4d:
             vec3 = self.vec3[0] * Other.x + self.vec3[1] * Other.y + self.vec3[2] * Other.z + self.vec3[3] * Other.w
             vec4 = self.vec4[0] * Other.x + self.vec4[1] * Other.y + self.vec4[2] * Other.z + self.vec4[3] * Other.w
             if vec4 != 0:
-                return vec4d(vec1 / vec4, vec2 / vec4, vec3 / vec4, vec4 / vec4)
+                return vec4d(vec1 / vec4, vec2 / vec4, vec3 / vec4, vec4 / vec4) #Can manually change whether to use w or not
             else:
                 raise ZeroDivisionError("Cannot divide by Zero\nCannot return to cartesian space")
 
@@ -142,7 +160,8 @@ def ProjectionMatrix(size = (100,100), theta = 30, zfar = 1000, znear = 0.01):
     vec2 = vec4d(0, fratio, 0, 0)
     vec3 = vec4d(0, 0, qratio , 1)
     vec4 = vec4d(0, 0, qratio - znear * qratio, 0)
+    #print(vec4)
     return Matrix4d(vec1, vec2, vec3, vec4)
 
-#Prodmatrix = ProjectionMatrix()
+Prodmatrix = ProjectionMatrix()
 #print(Prodmatrix)

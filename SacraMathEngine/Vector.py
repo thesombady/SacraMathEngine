@@ -229,9 +229,11 @@ class vec4d:
             raise ZeroDivisionError("The norm of the vector i zero, and thus it cannot be normalized.\nDivision with zero would occur.")
 
     def line(self, other, number):
+        if isinstance(other, vec3d):
+            other = vec4d(vector = other)
         mapx = abs(self.x - other.x) / number
         mapy = abs(self.y - other.y) / number
         mapz = abs(self.z - other.z) / number
         mapw = abs(self.w - other.w) / number
         vectors =[vec4d(self.x + mapx * i, self.y + mapy * i, self.z + mapz * i, self.w + mapw * i) for i in range(number + 1)]
-        print(vectors[-1])
+        return vectors
