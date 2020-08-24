@@ -140,6 +140,7 @@ class Matrix4d:
             vec3 = self.vec3[0] * Other.x + self.vec3[1] * Other.y + self.vec3[2] * Other.z + self.vec3[3] * Other.w
             vec4 = self.vec4[0] * Other.x + self.vec4[1] * Other.y + self.vec4[2] * Other.z + self.vec4[3] * Other.w
             if vec4 != 0:
+                vec4 = -vec4
                 return vec4d(vec1 / vec4, vec2 / vec4, vec3 / vec4, vec4 / vec4) #Can manually change whether to use w or not
             else:
                 raise ZeroDivisionError("Cannot divide by Zero\nCannot return to cartesian space")
