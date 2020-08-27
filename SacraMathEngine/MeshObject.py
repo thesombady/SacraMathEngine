@@ -53,10 +53,6 @@ class MeshObject:
             Vectors.append(vec)
         for i in range(0, len(Vectors)-2, 3):
             self.Mesh.append(Triangle(Vectors[i], Vectors[i + 1], Vectors[i + 2]))
-        """
-        for key in Data.keys():
-            print(key, Data[key])
-        """ # Small thing to get acess to the name
         self.AllActiveMeshes.append(self.Mesh)
         self.CenterOfMass()
         return '[System:] Intalization have been completed.'
@@ -124,7 +120,7 @@ class MeshObject:
         self.MeshCenterOfMass.append(self.CenterOfGravity)
 
 
-    def Collission(self):
+    def Collission(self):#Removed and added to the physics engine
         """Returns a boolean expression for each object colliding; Works upon the center of mass definition."""
         MeshesToSearchThrough = self.AllActiveMeshes.copy()
         MeshesCenterOfMass = self.MeshCenterOfMass.copy()
