@@ -99,12 +99,12 @@ class MeshObject:
 
     def __dir__(self):
         return ['__mul__', '__add__', 'CenterOfMass', 'Collission', '__len__', '__getitem__',
-        '__str__', '__repr__', 'getter', 'setter', 'SaveToJson']
+        '__str__', '__repr__', 'getter', 'setter', 'SaveToJson', 'GroundOfMesh']
 
     def CenterOfMass(self):
         """Returns a vuege center of mass, with some deviation; The deviation is the longest distance from center of mass.
         This method is not optimized for non-symetrical Meshes."""
-        center = vec3d(0,0,0)
+        center = vec3d(0,0,0) #The null-vector.
         for i in range(len(self.Mesh)):
             sum = (self.Mesh[i][0] + self.Mesh[i][1] + self.Mesh[i][2]) * (1/3)
             center += sum
@@ -119,6 +119,26 @@ class MeshObject:
         self.CenterOfGravity = (center, epsilon)
         self.MeshCenterOfMass.append(self.CenterOfGravity)
 
+    def GroundOfMesh(self):
+        def EvaluateTriangle(Triangle):
+            if Triangle[0][1] < Triangle[1][1]:
+                if Triangle[0][1] < Triangle[2][1]
+                    return Triangle[0]
+                elif Triangle[1][1] < Triangle[2][1]:
+                    return Triangle[1]
+            elif Triangle[1][1] < Triangle[0][1]:
+                if Triangle[1][1] < Triangle[2][1]:
+                    return Triangle[1]
+                elif Triangle[2][1] < Triangle[1][1]:
+                    return Triangle[2]
+            elif Triangle[2][1] < Triangle[1][1]:
+                if Triangle[2][1] < Triangle[0][1]:
+                    return Triangle[2]
+                else:
+                    return Triangle[0]
+        LowestVectors = [map(EvaluateTriangle, self.Mesh[i] for i in range(len(self.Mesh))] #Might be wrong but it should be correct!
+
+
 
     def Collission(self):#Removed and added to the physics engine
         """Returns a boolean expression for each object colliding; Works upon the center of mass definition."""
@@ -130,7 +150,7 @@ class MeshObject:
             del MeshesToSearchThrough[IndexForMesh: IndexForMass +1]
             del MeshesCenterOfMass[IndexForMass: IndexForMass + 1]
         except:
-            raise MeshObjectError("Cannot performe Collission calculations, indicies do not exist \n Needs atleast two meshes to search through.")
+            raise MeshObjectError("Cannot perform Collission calculations, indicies do not exist \n Needs atleast two meshes to search through.")
         for mesh in MeshesCenterOfMass: #This is not yet completed!
             if self.CenterOfGravity[1] == 0:
                 print('Something happens')

@@ -86,6 +86,9 @@ class vec3d:
         else:
             pass
 
+    def __contains__(self, value):
+        pass
+
     def dot(self, other):
         """Compute the dot-product of two vectors, returns a float or integer."""
         if isinstance(other, vec3d):
