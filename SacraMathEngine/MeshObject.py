@@ -121,11 +121,11 @@ class MeshObject:
         self.MeshCenterOfMass.append(self.CenterOfGravity)
 
     def GroundOfMesh(self, Mesh): #Haven't tested but should work, however it is going to be slow.
-        if not isinstance(Mesh, (list, tuple)):
+        if not isinstance(Mesh, list):
             raise TypeError("[System]: EvaluateVectors failed due to type, not list or tuple.")
         def EvaluateTriangle(Triangle):
             if Triangle[0][1] < Triangle[1][1]:
-                if Triangle[0][1] < Triangle[2][1]
+                if Triangle[0][1] < Triangle[2][1]:
                     return Triangle[0]
                 elif Triangle[1][1] < Triangle[2][1]:
                     return Triangle[1]
@@ -139,12 +139,12 @@ class MeshObject:
                     return Triangle[2]
                 else:
                     return Triangle[0]
-        LowestVectors = [map(EvaluateTriangle, self.Mesh[i]) for i in range(len(Mesh[i]))] #Might be wrong but it should be correct!
+        LowestVectors = [map(EvaluateTriangle, self.Mesh[i]) for i in range(len(Mesh))] #Might be wrong but it should be correct!
         NewMesh = []
-        for i in range(0,len(LowestVectors), 3):
+        for i in range(0,len(LowestVectors) - 2, 3):
             NewMesh.append(Triangle(LowestVectors[i], LowestVectors[i+1], LowestVectors[i+2]))
         if len(NewMesh) > 3:
-            GroundOfMesh(Newmesh):
+            self.GroundOfMesh(NewMesh)
         else:
             self.GroudTriangle = NewMesh
             return '[System]: Completed calculations for ground triangle.'
