@@ -98,6 +98,11 @@ class MeshObject:
             for tri in self.Mesh: # Each atribute "tri" is a triangle object.
                 NewMesh.append(tri * Object)
             return MeshObject(NewMesh)
+        elif isinstance(Object, (int, float)):
+            NewMesh = []
+            for tri in self.Mesh:
+                NewMesh.append(tri * Object)
+            return MeshObject(NewMesh)
 
     def __getitem__(self, index):
         if isinstance(index, int):
