@@ -69,9 +69,14 @@ class MeshObject:
 
     def __add__(self, Object):
         if isinstance(Object, Triangle):
-            NewMesh = self.Mesh.copy()
-            NewMesh.append(Object)
-            return MeshObject(NewMesh)
+            if self.Mesh == None:
+                NewMesh = []
+                NewMesh.append(Object)
+                return MeshObject(NewMesh)
+            else:
+                NewMesh = self.Mesh.copy()
+                NewMesh.append(Object)
+                return MeshObject(NewMesh)
         elif isinstance(Object, MeshObject):
             NewMesh = self.Mesh + Object.Mesh
             return MeshObject(NewMesh)
