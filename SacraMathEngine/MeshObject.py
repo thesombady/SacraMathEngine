@@ -58,6 +58,7 @@ class MeshObject:
         self.GroundOfMesh(self.Mesh)
         return '[System:] Intalization have been completed.'
 
+
     def getter(self):
         return f'{self.Mesh}'
 
