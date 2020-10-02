@@ -36,8 +36,8 @@ class MeshObject3d():
         if isinstance(Other, vec3d):
             NewMesh = self.Mesh.copy()
             ShiftedMesh = []
-            for tri in NewMesh:
-                ShiftedMesh.append(tri + Other)
+            for i in range(len(NewMesh)):
+                print(type(NewMesh[i]))
             return MeshObject3d(ShiftedMesh)
         elif isinstance(Other, Triangle):
             NewMesh = self.Mesh.copy()
@@ -52,5 +52,7 @@ Mesh = MeshObject3d()
 Triangle1 = Triangle(vec3d(1,1,1), vec3d(2,2,2), vec3d(3,3,3))
 a = Mesh + Triangle1
 print(a)
+#print(a)
+#print(Triangle1 + vec3d(1,1,1))
 a = a + vec3d(1,1,1)
-print(a)
+#print(a)
