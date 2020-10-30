@@ -12,6 +12,7 @@ class vec3d:
             self.y = y
             self.z = z
         self.set = self.x, self.y, self.z
+        self.set2 = [self.x, self.y, self.z]
 
     def __repr__(self):
         """Default print statement"""

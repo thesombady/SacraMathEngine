@@ -16,6 +16,7 @@ class Triangle:
         self.vec3 = vec3
         self.reminder = reminder
         self.set = [self.vec1, self.vec2, self.vec3]
+        self.set2 = [self.vec1.set2, self.vec2.set2, self.vec3.set2]
 
 
     def __str__(self):
