@@ -90,7 +90,7 @@ class MeshObject3d():
                         raise ValueError('[System]: Cant compute center of mass, error in deviation definition')
             Epsilon = max(deviation)
             self.CenterOfGravity = (Center, Epsilon)
-            print(self.CenterOfGravity)
+            #print(self.CenterOfGravity)
 
 
 
@@ -102,4 +102,11 @@ A = (a + Triangle1) + vec3d(1,1,1)
 print(A)
 #A._saver('Kid')
 """
-Mesh = MeshObject3d()._setter('Kid')
+"""Making a pyramid/tetrahydron """
+"""
+Mesh = MeshObject3d()
+a = Mesh + Triangle(vec3d(0,0,0), vec3d(1,0,0), vec3d(0,0,1)) #Bottom
+a = a + Triangle(vec3d(0,0,0), vec3d(0,1,0), vec3d(0,0,1)) #Side 1
+a = a + Triangle(vec3d(1,0,0), vec3d(0,1,0), vec3d(0,0,1)) #Side 2
+a = a + Triangle(vec3d(1,0,0), vec3d(0,1,0), vec3d(0,0,0)) #Side 3
+"""
