@@ -19,35 +19,6 @@ class MeshObject3d():
     def __repr__(self):
         return f'{self.Mesh}'
 
-    def _setter(self, object):
-        try:
-            path = os.path.join('/Users/andreasevensen/Documents/GitHub/Sacra/saves', NameOfObject + '.json') #change when done
-            with open(path) as file:
-                Data = json.load(file)
-            for x in Data.keys():
-                #If there are multiple keys in the .json file, the last key will be used.
-                ListMesh = Data[x]
-            #print(ListMesh[0])
-        except Exception as E:
-            #raise PathError("Current file do not exits.")
-            raise E
-
-    def __a2dd__(self, Other):
-        if isinstance(Other, vec3d):
-            NewMesh = self.Mesh.copy()
-            ShiftedMesh = []
-            for i in range(len(NewMesh)):
-                print(type(NewMesh[i]))
-            return MeshObject3d(ShiftedMesh)
-        elif isinstance(Other, Triangle):
-            NewMesh = self.Mesh.copy()
-            NewMesh.append(Triangle)
-            return MeshObject3d(NewMesh)
-        elif isinstance(Other, MeshObject3d):
-            pass
-        else:
-            raise TypeError("[SystemError]: Cannot add object to Mesh")
-
     def __add__(self, Other):
         if isinstance(Other, Triangle):
             if len(self.Mesh) != 0: # Tests if the is already a mesh exisitng
@@ -71,21 +42,43 @@ class MeshObject3d():
 
     def _saver(self, Name):
         try:
-            filepath = os.path.join('/Users/andreasevensen/Documents/GitHub/Sacra/Saves', Name + '.json')
+            Filepath = os.path.join('/Users/andreasevensen/Documents/GitHub/Sacra/Saves', Name + '.json')
         except Exception as E:
             raise E('[System]: Cant write MeshObject.')
         Meshdata = [self.Mesh[i].set2 for i in range(len(self.Mesh))]
         data = {Name : Meshdata}
         try:
-            with open(filepath, 'w') as file:
+            with open(Filepath, 'w') as file:
                 json.dump(data, file, indent = 3)
         except Exception as E:
             raise E
 
+    def _setter(self, Name):
+        try:
+            Filepath = os.path.join('/Users/andreasevensen/Documents/GitHub/Sacra/Saves', Name + '.json')
+        except:
+            raise KeyError('[System]: Cant load current file')
+        with open(Filepath, 'r') as file:
+            JsonData = json.load(file)
+        for key in JsonData.keys(): #Should be one key!
+            Data = JsonData[key]
+        Mesh = []
+        for tri1 in Data:
+            vec1 = vec3d(tri1[0][0], tri1[0][1], tri1[0][2])
+            vec2 = vec3d(tri1[1][0], tri1[1][1], tri1[1][2])
+            vec3 = vec3d(tri1[2][0], tri1[2][1], tri1[2][2])
+            tri2 = Triangle(vec1, vec2, vec3)
+            Mesh.append(tri2)
+        return MeshObject3d(Mesh)
 
+
+"""
 Mesh = MeshObject3d()
 Triangle1 = Triangle(vec3d(1,1,1), vec3d(2,2,2), vec3d(3,3,3))
 a = Mesh + Triangle1
 A = (a + Triangle1) + vec3d(1,1,1)
 print(A)
-A._saver('Kid')
+#A._saver('Kid')
+"""
+Mesh = MeshObject3d()._setter('Kid')
+print(Mesh)
