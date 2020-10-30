@@ -14,7 +14,7 @@ class MeshObject3d():
             self.Mesh = Iterated
         else:
             self.Mesh = []
-        pass
+        self._CenterOfMass()
 
     def __repr__(self):
         return f'{self.Mesh}'
@@ -71,6 +71,28 @@ class MeshObject3d():
             Mesh.append(tri2)
         return MeshObject3d(Mesh)
 
+    def _CenterOfMass(self):
+        if len(self.Mesh) == 0:
+            pass
+        else:
+            Center = vec3d(0,0,0)
+            for i in range(len(self.Mesh)):
+                sum = (self.Mesh[i][0] + self.Mesh[i][1] + self.Mesh[i][2]) * (1/3)
+                Center += sum
+            Center = Center/len(self.Mesh)
+            deviation = []
+            for i in range(len(self.Mesh)):
+                for j in range(3):
+                    delta = Center - self.Mesh[i][j]
+                    try:
+                        deviation.append(abs(delta.norm()))
+                    except:
+                        raise ValueError('[System]: Cant compute center of mass, error in deviation definition')
+            Epsilon = max(deviation)
+            self.CenterOfGravity = (Center, Epsilon)
+            print(self.CenterOfGravity)
+
+
 
 """
 Mesh = MeshObject3d()
@@ -81,4 +103,3 @@ print(A)
 #A._saver('Kid')
 """
 Mesh = MeshObject3d()._setter('Kid')
-print(Mesh)
