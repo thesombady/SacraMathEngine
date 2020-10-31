@@ -1,11 +1,11 @@
 import os
 import json
-
+"""
 from .Vector import vec3d, vec4d
 from .Triangle import Triangle
 from .Matrix import matrix3d, Matrix4d
-
-#from SacraMathEngine import vec3d, vec4d, Triangle, matrix3d, Matrix4d
+"""
+from SacraMathEngine import vec3d, vec4d, Triangle, matrix3d, Matrix4d
 
 class MeshObject3d():
 
@@ -49,6 +49,12 @@ class MeshObject3d():
                 return MeshObject3d(NewMesh)
             except:
                 raise KeyError('[System]: Cant compute __mul__ method.')
+
+    def __len__(self):
+        return len(self.Mesh)
+
+    def __getitem__(self, index):
+        return self.Mesh[index]
 
 
     def _saver(self, Name):
@@ -121,4 +127,22 @@ a = Mesh + Triangle(vec3d(0,0,0), vec3d(1,0,0), vec3d(0,0,1)) #Bottom
 a = a + Triangle(vec3d(0,0,0), vec3d(0,1,0), vec3d(0,0,1)) #Side 1
 a = a + Triangle(vec3d(1,0,0), vec3d(0,1,0), vec3d(0,0,1)) #Side 2
 a = a + Triangle(vec3d(1,0,0), vec3d(0,1,0), vec3d(0,0,0)) #Side 3
+a._saver('Tetrahydron')
+"""
+"""Making a Cube"""
+"""
+Mesh = MeshObject3d()
+A = Mesh + Triangle(vec3d(0,0,0), vec3d(0,0,1), vec3d(1,0,1)) #Buttom1
+A = A + Triangle(vec3d(1,0,0), vec3d(1,1,0), vec3d(0,1,0)) #Bottom2
+A = A + Triangle(vec3d(0,0,0), vec3d(0,1,0), vec3d(1,0,0)) #Side1-1 #Front-1-2
+A = A + Triangle(vec3d(1,0,0), vec3d(1,1,0), vec3d(0,1,0)) #Side1-2
+A = A + Triangle(vec3d(0,0,0), vec3d(0,1,0), vec3d(0,0,1)) #Side2-1 #West-1-2
+A = A + Triangle(vec3d(0,0,1), vec3d(0,1,1), vec3d(0,1,0)) #Side2-2
+A = A + Triangle(vec3d(0,1,0), vec3d(1,1,0), vec3d(1,1,1)) #Side3-1 #Top-1-2
+A = A + Triangle(vec3d(1,1,1), vec3d(0,1,1), vec3d(1,1,0)) #side3-2
+A = A + Triangle(vec3d(1,1,0), vec3d(1,1,1), vec3d(1,0,0)) #Side4-1 #East-1-2
+A = A + Triangle(vec3d(1,0,0), vec3d(1,0,1), vec3d(1,1,1)) #Side4-2
+A = A + Triangle(vec3d(1,1,1), vec3d(1,0,1), vec3d(0,0,1)) #Side5-1 #North-1-2
+A = A + Triangle(vec3d(0,0,1), vec3d(0,1,1), vec3d(1,1,1)) #Side5-2
+A._saver('Cube')
 """

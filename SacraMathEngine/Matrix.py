@@ -1,5 +1,6 @@
 from math import tan, pi, radians
 from .Vector import vec3d, vec4d
+#from SacraMathEngine import vec3d, vec4d, MeshObject3d
 #from SacraMathEngine import *
 
 class matrix3d:
@@ -161,8 +162,7 @@ def ProjectionMatrix(size = (100,100), theta = 30, zfar = 1000, znear = 0.01):
     vec2 = vec4d(0, fratio, 0, 0)
     vec3 = vec4d(0, 0, qratio , 1)
     vec4 = vec4d(0, 0, qratio - znear * qratio, 0)
-    #print(vec4)
     return Matrix4d(vec1, vec2, vec3, vec4)
 
-Prodmatrix = ProjectionMatrix()
+#Prodmatrix = ProjectionMatrix()
 #print(Prodmatrix)
