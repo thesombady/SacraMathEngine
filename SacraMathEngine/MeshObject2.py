@@ -1,11 +1,11 @@
 import os
 import json
-"""
+
 from .Vector import vec3d, vec4d
 from .Triangle import Triangle
 from .Matrix import matrix3d, Matrix4d
-"""
-from SacraMathEngine import vec3d, vec4d, Triangle, matrix3d, Matrix4d
+
+#from SacraMathEngine import vec3d, vec4d, Triangle, matrix3d, Matrix4d
 
 class MeshObject3d():
 
@@ -38,6 +38,17 @@ class MeshObject3d():
                 raise TypeError("[System]: Cannot add object to Mesh.")
         else:
             pass
+
+    def __mul__(self, scalar):
+        if not isinstance(scalar, (float, int)):
+            raise TypeError("[System]: Can only scale with scalar values")
+        else:
+            Mesh = self.Mesh.copy()
+            try:
+                NewMesh = [Mesh[i] * scalar for i in range(len(Mesh))]
+                return MeshObject3d(NewMesh)
+            except:
+                raise KeyError('[System]: Cant compute __mul__ method.')
 
 
     def _saver(self, Name):
@@ -90,7 +101,8 @@ class MeshObject3d():
                         raise ValueError('[System]: Cant compute center of mass, error in deviation definition')
             Epsilon = max(deviation)
             self.CenterOfGravity = (Center, Epsilon)
-            #print(self.CenterOfGravity)
+
+
 
 
 
