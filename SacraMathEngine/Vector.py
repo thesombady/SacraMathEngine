@@ -118,7 +118,7 @@ class vec3d:
 
     def normalize(self):
         """Normalizes a vector with self.norm() function and returns a vec3d-object"""
-        return 1 / (self.norm()) * vec3d(self.vec1, self.vec2, self.vec3) # a valid solution is * self
+        return 1 / (self.norm()) * vec3d(self.x, self.y, self.z) # a valid solution is * self
 
     def line(self, Other, Number):
         """Returns multiple vectors that increase equvilantly"""
@@ -138,6 +138,9 @@ class vec3d:
 
         else:
             raise TypeError("Line method can only take integers as inputs")
+
+    def _int(self):
+        return vec3d(int(self.x), int(self.y), int(self.z))
 
     def project2d(self, ratio, theta):
 

@@ -121,14 +121,14 @@ print(A)
 #A._saver('Kid')
 """
 """Making a pyramid/tetrahydron """
-"""
+
 Mesh = MeshObject3d()
 a = Mesh + Triangle(vec3d(0,0,0), vec3d(1,0,0), vec3d(0,0,1)) #Bottom
 a = a + Triangle(vec3d(0,0,0), vec3d(0,1,0), vec3d(0,0,1)) #Side 1
 a = a + Triangle(vec3d(1,0,0), vec3d(0,1,0), vec3d(0,0,1)) #Side 2
 a = a + Triangle(vec3d(1,0,0), vec3d(0,1,0), vec3d(0,0,0)) #Side 3
 a._saver('Tetrahydron')
-"""
+
 """Making a Cube"""
 """
 Mesh = MeshObject3d()
