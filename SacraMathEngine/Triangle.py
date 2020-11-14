@@ -51,8 +51,6 @@ class Triangle:
     def __len__(self):
         return len(self.set)
 
-
-
     def normvector(self):
         """Calculates the facing of the Triangle."""
         vec1 = self.vec1 - self.vec3
