@@ -51,6 +51,12 @@ class Triangle:
     def __len__(self):
         return len(self.set)
 
+    def __eq__(self, other):
+        if self.vec1 == other.vec1 and self.vec2 == other.vec2 and self.vec3 == other.vec3:
+            return True
+        else:
+            return False
+
     def normvector(self):
         """Calculates the facing of the Triangle."""
         vec1 = self.vec1 - self.vec3

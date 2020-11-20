@@ -39,7 +39,7 @@ class MeshObject3d():
         else:
             pass
 
-    def __mul__(self, scalar):
+    def __mul__(self, scalar): #Scales with a scalar
         if not isinstance(scalar, (float, int)):
             raise TypeError("[System]: Can only scale with scalar values")
         else:
@@ -55,6 +55,18 @@ class MeshObject3d():
 
     def __getitem__(self, index):
         return self.Mesh[index]
+
+    def _RemoveTriangle(self, triangle):
+        if isinstance(triangle, Triangle):
+            for i in range(len(self.Mesh)):
+                if triangle == self.Mesh[i]: #self.Mesh[i] is a triangle
+                    MeshCopy = self.Mesh.copy()
+                    del MeshCopy[i]
+                    return MeshCopy
+                else:
+                    raise KeyError("[System]: Variable, triangle, does not exist in the mesh")
+        else:
+             raise TypeError("[System]: Input, triangle is or wrong time, needs to be of type triangle")
 
 
     def _saver(self, Name):

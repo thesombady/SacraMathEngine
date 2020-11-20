@@ -90,6 +90,12 @@ class vec3d:
     def __contains__(self, value):
         pass
 
+    def __eq__(self, other):
+        if self.x == other.x and self.y == other.y and self.z == other.z:
+            return True
+        else:
+            return False
+
     def dot(self, other):
         """Compute the dot-product of two vectors, returns a float or integer."""
         if isinstance(other, vec3d):
