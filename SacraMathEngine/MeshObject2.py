@@ -95,7 +95,6 @@ class MeshObject3d():
             JsonData = json.load(file)
         for key in JsonData.keys(): #Should be one key!
             Data = JsonData[key]
-            print(Data)
         Mesh = []
         for tri1 in Data:
             vec1 = vec3d(tri1[0][0], tri1[0][1], tri1[0][2])
