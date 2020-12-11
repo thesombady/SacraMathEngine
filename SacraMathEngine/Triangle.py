@@ -23,6 +23,9 @@ class Triangle:
         """Print statement for Triangle-object"""
         return f'[{self.vec1}, {self.vec2}, {self.vec3}]'
 
+    def __repr__(self):
+        return f'[{self.vec1}, {self.vec2}, {self.vec3}]'
+
     def __add__(self, vector):
         if isinstance(vector, (vec3d, vec4d)):
             return Triangle(self.vec1 + vector, self.vec2 + vector, self.vec3 + vector)
