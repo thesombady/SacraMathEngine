@@ -149,7 +149,6 @@ class vec3d:
         return vec3d(int(self.x), int(self.y), int(self.z))
 
     def project2d(self, ratio, theta):
-
         pass
 
 class vec4d:

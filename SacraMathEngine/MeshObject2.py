@@ -8,7 +8,6 @@ from .Matrix import matrix3d, Matrix4d
 from SacraMathEngine import vec3d, vec4d, Triangle, matrix3d, Matrix4d
 
 class MeshObject3d():
-
     def __init__(self, Iterated = False):
         if Iterated != False:
             self.Mesh = Iterated
@@ -84,9 +83,14 @@ class MeshObject3d():
 
     def _setter(self, Name):
         try:
-            Filepath = os.path.join('/Users/andreasevensen/Documents/GitHub/Sacra/Saves', Name + '.json')
+            #Filepath = os.path.join('/Users/andreasevensen/Documents/GitHub/Sacra/Saves', Name + '.json')
+            #Filepath = os.path.join(os.getcwd(), Name)
+            Filepath = Name
         except:
-            raise KeyError('[System]: Cant load current file')
+            try:
+                Filepath = os.path.join('/Users/andreasevensen/Documents/GitHub/Sacra/Saves', Name + '.json')
+            except:
+                raise KeyError('[System]: Cant load current file')
         with open(Filepath, 'r') as file:
             JsonData = json.load(file)
         for key in JsonData.keys(): #Should be one key!
