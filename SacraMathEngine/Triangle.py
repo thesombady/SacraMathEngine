@@ -66,9 +66,16 @@ class Triangle:
                 return True
         return False
 
+    def _ZeroVector1(self):
+        for i in range(3):
+            if self.set[i] == vec3d(0,0,0):
+                return True
+        return False
+
 
     def normvector(self):
         """Calculates the facing of the Triangle."""
+        """
         try:
             Tested = [self.set[i] for i in range(len(self.set)) if self.set[i] != vec3d(0,0,0)]
             if len(Tested) == 3:
@@ -79,5 +86,8 @@ class Triangle:
                 return Tested[0].cross(Tested[1])
         except Exception as e:
             raise e
+        """
+        try:
+            Test = [self.set[i]]
 #triangle1 = Triangle(vec3d(0,0,0), vec3d(1,0,0), vec3d(0,1,1))
 #print(triangle1.normvector())
