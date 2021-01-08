@@ -24,15 +24,18 @@ class Triangle:
         return f'[{self.vec1}, {self.vec2}, {self.vec3}]'
 
     def __repr__(self):
+        """Print statement for Triangle-object"""
         return f'[{self.vec1}, {self.vec2}, {self.vec3}]'
 
     def __add__(self, vector):
+        """Definition of adding vectors in a set"""
         if isinstance(vector, (vec3d, vec4d)):
             return Triangle(self.vec1 + vector, self.vec2 + vector, self.vec3 + vector)
         else:
             pass
 
     def __sub__(self, vector):
+        """Definition of subtracting vectors in a set"""
         if isinstance(vector, (vec3d, vec4d)):
             return Triangle(self.vec1 - vector, self.vec2 - vector, self.vec3 - vector)
 
@@ -61,12 +64,14 @@ class Triangle:
             return False
 
     def _ZeroVector(self, triangle):
+        """Do not use this method"""
         for i in range(len(triangle)):
             if triangle[i] == vec3d(0,0,0):
                 return True
         return False
 
     def _ZeroVector1(self):
+        """Checks if an a vector in the triangle and returns a boolean-value accordingly."""
         for i in range(3):
             if self.set[i] == vec3d(0,0,0):
                 return True
@@ -88,6 +93,33 @@ class Triangle:
             raise e
         """
         try:
-            Test = [self.set[i]]
+            if self._ZeroVector1():
+                if self.set[0] == vec3d(0,0,0):
+                    if self.set[1] == vec3d(0,0,0) and self.set[2] == vec3d(0,0,0):
+                        return vec3(1,0,0)
+                    elif self.set[1] == vec3d(0,0,0):
+                        return self.set[2]
+                    elif self.set[2] == vec3d(0,0,0):
+                        return self.set[1]
+                elif self.set[1] == vec3d(0,0,0):
+                    if self.set[0] == vec3d(0,0,0) and self.set[2] == vec3d(0,0,0):
+                        return vec3d(1,0,0)
+                    elif self.set[0] == vec3d(0,0,0):
+                        return self.set[2]
+                    elif self.set[2] == vec3d(0,0,0):
+                        return self.set[0]
+                elif self.set[2] == vec3d(0,0,0):
+                    if self.set[0] == vec3d(0,0,0) and self.set[1] == vec3d(0,0,0):
+                        return vec3d(1,0,0)
+                    elif self.set[0] == vec3d(0,0,0):
+                        return self.set[1]
+                    elif self.set[1] == vec3d(0,0,0):
+                        return self.set[0]
+            else:
+                vec1 = self.vec1 - self.vec2
+                vec2 = self.vec2 - self.vec3
+                return vec1.cross(vec2)
+        except:
+            raise ValueError("[Triangle]:Cant compute the norm value")
 #triangle1 = Triangle(vec3d(0,0,0), vec3d(1,0,0), vec3d(0,1,1))
 #print(triangle1.normvector())
